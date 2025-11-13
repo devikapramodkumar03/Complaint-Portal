@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CitizenConnect</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Noto+Sans:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #003366;
+            --primary-white: #F8F9FA;
+            --accent-saffron: #E87A24;
+            --accent-green: #28A745;
+            --text-charcoal: #333333;
+            --border-light: #dee2e6;
+            --status-submitted: #007bff;
+            --status-progress: var(--accent-saffron);
+            --status-resolved: var(--accent-green);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background-color: var(--primary-white);
+            color: var(--text-charcoal);
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            font-weight: 700;
+        }
+
+        .user-info a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 20px;
+        }
+        .user-info a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .dashboard-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .welcome-section h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 2rem;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+        .welcome-section p {
+            margin-bottom: 20px;
+            color: #6c757d;
+        }
+
+        .btn {
+            background-color: var(--accent-saffron);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #d16a1e;
+        }
+        .btn-secondary {
+             background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+             background-color: #5a6268;
+        }
+
+        /* Complaint Registration Form (Initially Hidden) */
+        #complaint-form-container {
+            display: none;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-light);
+        }
+        #complaint-form-container h3 {
+             color: var(--primary-blue); margin-bottom: 20px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid var(--border-light);
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 1rem;
+        }
+        
+        h2.section-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+        }
+        
+        .complaint-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .complaint-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .complaint-details h4 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: var(--text-charcoal);
+        }
+        .complaint-details p {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 500;
+            min-width: 100px;
+            text-align: center;
+        }
+        .status-Submitted { background-color: var(--status-submitted); }
+        .status-In.Progress { background-color: var(--status-progress); }
+        .status-Resolved { background-color: var(--status-resolved); }
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo-text">CitizenConnect</div>
+        <div class="user-info">
+            <span>Welcome, <strong>{{ user.name }}</strong></span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+   
+        <div class="dashboard-card welcome-section">
+            <h1>Your Dashboard</h1>
+            <p>File a new civic complaint or track the status of your existing submissions below.</p>
+            <button class="btn" id="register-complaint-btn"><i class="fas fa-plus"></i> Register New Complaint</button>
+
+            <div id="complaint-form-container">
+                <h3>New Complaint Form</h3>
+                <form action="{{ url_for('add_complaint') }}" method="POST">
+                    <div class="form-group">
+                        <label for="title">Complaint Title</label>
+                        <input type="text" id="title" name="title" placeholder="e.g., Broken streetlight on Main St." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Detailed Description</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Provide as much detail as possible..." required></textarea>
+                    </div>
+                     <div class="form-group">
+                        <label for="photo">Upload Geotagged Photo</label>
+                        <input type="file" id="photo" name="photo" accept="image/jpeg, image/png">
+                    </div>
+                    <button type="submit" class="btn">Submit Complaint</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <h2 class="section-title">My Complaints</h2>
+        <div class="complaint-list">
+            {% for complaint in complaints %}
+                <div class="complaint-card">
+                    <div class="complaint-details">
+                        <h4>{{ complaint.title }}</h4>
+                        <p>ID: {{ complaint.id }} | Submitted: {{ complaint.date_submitted }}</p>
+                    </div>
+                    <div class="status-badge status-{{ complaint.status.replace(' ', '.') }}">
+                        {{ complaint.status }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="dashboard-card">
+                    <p>You have not registered any complaints yet. Click the button above to get started!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const registerBtn = document.getElementById('register-complaint-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const formContainer = document.getElementById('complaint-form-container');
+
+            registerBtn.addEventListener('click', () => {
+                formContainer.style.display = 'block';
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                formContainer.style.display = 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>
