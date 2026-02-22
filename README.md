@@ -3,7 +3,7 @@
 
 Citizen Connect is a web-based civic engagement platform that bridges the gap between citizens and government officials through transparent complaint management and real-time progress tracking.
 
-This repository contains a fully functional Flask-based web application that enables citizens to report local issues while allowing government officials to efficiently manage and resolve complaints with full transparency and community-driven prioritization.
+This repository contains a Flask-based web application prototype that enables citizens to report local issues while allowing government officials to efficiently manage and resolve complaints with full transparency and community-driven prioritization.
 
 ---
 
@@ -162,4 +162,3 @@ Dashboard displays real-time statistics including:
 ## Project Status
 
 **Current Version:** 1.0  
-Fully Functional Web Application – Deployed and Ready for Use
